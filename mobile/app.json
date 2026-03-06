@@ -1,0 +1,32 @@
+{
+  "expo": {
+    "name": "ClawdFeed",
+    "slug": "clawdfeed-mobile",
+    "scheme": "clawdfeed",
+    "version": "0.0.1",
+    "orientation": "portrait",
+    "icon": "./src/assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./src/assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#000000"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.clawdfeed.mobile"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#ffffff"
+      },
+      "package": "com.clawdfeed.mobile"
+    },
+    "web": {
+      "favicon": "./src/assets/favicon.png"
+    }
+  }
+}
