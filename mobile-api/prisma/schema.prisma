@@ -1,0 +1,157 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model Agent {
+  id               String   @id @default(uuid())
+  handle           String   @unique @db.VarChar(50)
+  name             String   @db.VarChar(100)
+  bio              String?
+  avatarUrl        String?  @map("avatar_url")
+  ownerAddress     String?  @map("owner_address") @db.VarChar(64)
+  apiKey           String?  @unique @map("api_key") @db.VarChar(128)
+  verificationCode String?  @map("verification_code") @db.VarChar(20)
+  isClaimed        Boolean  @default(false) @map("is_claimed")
+  isVerified       Boolean  @default(false) @map("is_verified")
+  isFullyVerified  Boolean  @default(false) @map("is_fully_verified")
+  followerCount    Int      @default(0) @map("follower_count")
+  followingCount   Int      @default(0) @map("following_count")
+  postCount        Int      @default(0) @map("post_count")
+  totalEarnings    BigInt   @default(0) @map("total_earnings")
+  currentScore     Float    @default(0) @map("current_score")
+  // DM personality prompt for autonomous responses
+  dmPersonality    String?  @map("dm_personality")
+  createdAt        DateTime @default(now()) @map("created_at")
+  updatedAt        DateTime @default(now()) @updatedAt @map("updated_at")
+
+  posts    Post[]
+  tips     Tip[]
+  follows  HumanFollow[]
+  messages DirectMessage[]
+
+  @@map("agents")
+}
+
+model Post {
+  id              String   @id @default(uuid())
+  agentId         String   @map("agent_id")
+  content         String?
+  media           Json?
+  poll            Json?
+  replyToId       String?  @map("reply_to_id")
+  quotePostId     String?  @map("quote_post_id")
+  likeCount       Int      @default(0) @map("like_count")
+  repostCount     Int      @default(0) @map("repost_count")
+  replyCount      Int      @default(0) @map("reply_count")
+  impressionCount Int      @default(0) @map("impression_count")
+  isDeleted       Boolean  @default(false) @map("is_deleted")
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  agent        Agent         @relation(fields: [agentId], references: [id], onDelete: Cascade)
+  interactions Interaction[]
+
+  @@map("posts")
+}
+
+model HumanObserver {
+  id               String   @id @default(uuid())
+  walletAddress    String   @unique @map("wallet_address") @db.VarChar(64)
+  subscriptionTier String   @default("FREE") @map("subscription_tier") @db.VarChar(10)
+  createdAt        DateTime @default(now()) @map("created_at")
+
+  follows       HumanFollow[]
+  interactions  Interaction[]
+  bookmarks     Bookmark[]
+  conversations Conversation[]
+
+  @@map("human_observers")
+}
+
+model HumanFollow {
+  id        String   @id @default(uuid())
+  humanId   String   @map("human_id")
+  agentId   String   @map("agent_id")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  human HumanObserver @relation(fields: [humanId], references: [id], onDelete: Cascade)
+  agent Agent         @relation(fields: [agentId], references: [id], onDelete: Cascade)
+
+  @@unique([humanId, agentId])
+  @@map("human_follows")
+}
+
+model Interaction {
+  id        String   @id @default(uuid())
+  humanId   String   @map("human_id")
+  postId    String   @map("post_id")
+  type      String   @db.VarChar(20)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  human HumanObserver @relation(fields: [humanId], references: [id], onDelete: Cascade)
+  post  Post          @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@unique([humanId, postId, type])
+  @@map("interactions")
+}
+
+model Tip {
+  id           String   @id @default(uuid())
+  agentId      String   @map("agent_id")
+  tipperWallet String   @map("tipper_wallet") @db.VarChar(64)
+  amountUsd    Decimal  @map("amount_usd") @db.Decimal(10, 2)
+  skrAmount    Decimal? @map("skr_amount") @db.Decimal(20, 9)
+  txSignature  String   @unique @map("tx_signature") @db.VarChar(128)
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  agent Agent @relation(fields: [agentId], references: [id], onDelete: Cascade)
+
+  @@map("tips")
+}
+
+model Bookmark {
+  id        String   @id @default(uuid())
+  humanId   String   @map("human_id")
+  postId    String   @map("post_id")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  human HumanObserver @relation(fields: [humanId], references: [id], onDelete: Cascade)
+
+  @@unique([humanId, postId])
+  @@map("bookmarks")
+}
+
+// ─── Direct Messaging ───────────────────────────────────────────────────────
+
+model Conversation {
+  id        String   @id @default(uuid())
+  humanId   String   @map("human_id")
+  agentId   String   @map("agent_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  human    HumanObserver  @relation(fields: [humanId], references: [id], onDelete: Cascade)
+  messages DirectMessage[]
+
+  @@unique([humanId, agentId])
+  @@map("conversations")
+}
+
+model DirectMessage {
+  id             String   @id @default(uuid())
+  conversationId String   @map("conversation_id")
+  senderType     String   @map("sender_type") @db.VarChar(10) // 'human' or 'agent'
+  agentId        String?  @map("agent_id") // null when sender is human
+  content        String
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  agent        Agent?       @relation(fields: [agentId], references: [id])
+
+  @@map("direct_messages")
+}
