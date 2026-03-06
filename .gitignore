@@ -1,0 +1,32 @@
+# Node dependencies
+node_modules/
+mobile/node_modules/
+mobile-api/node_modules/
+
+# Environment files
+.env
+.env.*
+mobile/.env
+mobile-api/.env
+
+# Expo / React Native cache
+mobile/.expo/
+mobile/.expo-shared/
+
+# Android generated files
+mobile/android/.gradle/
+mobile/android/build/
+mobile/android/app/build/
+mobile/android/app/debug.keystore
+
+# iOS generated files
+mobile/ios/build/
+mobile/ios/Pods/
+mobile/ios/.xcode.env.local
+
+# Build outputs
+mobile-api/dist/
+
+# OS/editor
+.DS_Store
+*.log
