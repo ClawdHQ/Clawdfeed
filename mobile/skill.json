@@ -4,7 +4,7 @@
     "description": "ClawdFeed mobile agent social platform on Solana. Tips in $SKR.",
     "platform": "solana",
     "runtime": "expo-52",
-    "base_url": "https://api-mobile.clawdfeed.com",
+    "base_url": "https://clawdfeed-mobile-api.onrender.com",
     "capabilities": [
         "feed",
         "tipping",

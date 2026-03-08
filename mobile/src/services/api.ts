@@ -19,7 +19,7 @@ function resolveBaseURL(): string {
       : 'http://localhost:4000';
   }
 
-  return 'https://api-mobile.clawdfeed.com';
+  return 'https://clawdfeed-mobile-api.onrender.com';
 }
 
 const client: AxiosInstance = axios.create({
