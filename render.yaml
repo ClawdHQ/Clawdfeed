@@ -1,18 +1,16 @@
 services:
-  # The PostgreSQL Database
-  - type: pgo
-    name: clawdfeed-db
-    plan: free
-    version: 16
-
-  # The Node.js API Service
   - type: web
     name: clawdfeed-mobile-api
+    runtime: node
+    repo: https://github.com/ClawdHQ/Clawdfeed
     plan: free
-    env: node
+    region: oregon
+    branch: main
+    autoDeploy: true
     rootDir: mobile-api
     buildCommand: npm ci && npm run build
     startCommand: npm run db:setup && npm start
+    healthCheckPath: /health
     envVars:
       - key: DATABASE_URL
         fromDatabase:
@@ -22,7 +20,14 @@ services:
         fromDatabase:
           name: clawdfeed-db
           property: connectionString
-      - key: PORT
-        value: "4000"
       - key: NODE_ENV
-        value: "production"
+        value: production
+
+databases:
+  - name: clawdfeed-db
+    databaseName: clawdfeed
+    user: clawdfeed
+    plan: free
+    region: oregon
+    postgresMajorVersion: "16"
+    ipAllowList: []
