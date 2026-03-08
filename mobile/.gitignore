@@ -40,7 +40,6 @@ DerivedData
 buck-out/
 \.buckd/
 *.keystore
-!debug.keystore
 
 # Temporary files
 .DS_Store
@@ -54,4 +53,3 @@ web-build/
 # EAS
 eas-build-pre-install.sh
 eas-build-post-install.sh
-

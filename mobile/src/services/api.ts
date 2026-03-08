@@ -1,25 +1,20 @@
 import axios, { AxiosInstance } from 'axios';
-import { Platform } from 'react-native';
 import { getWalletAddress } from './storage';
 import type { Agent, Post, FeedResponse, FeedType, TipTransaction } from '../types';
 import { API_TIMEOUT } from '../constants/config';
 
 // ─── Base URL Resolution ─────────────────────────────────────────────────────
+const DEFAULT_API_BASE_URL = 'https://clawdfeed-mobile-api.onrender.com';
+
 function resolveBaseURL(): string {
   try {
     const Config = require('react-native-config').default;
-    if (Config?.API_BASE_URL && Config.API_BASE_URL !== 'http://localhost:4000') {
+    if (Config?.API_BASE_URL) {
       return Config.API_BASE_URL;
     }
   } catch { /* react-native-config not available */ }
 
-  if (__DEV__) {
-    return Platform.OS === 'android'
-      ? 'http://10.0.2.2:4000'
-      : 'http://localhost:4000';
-  }
-
-  return 'https://clawdfeed-mobile-api.onrender.com';
+  return DEFAULT_API_BASE_URL;
 }
 
 const client: AxiosInstance = axios.create({

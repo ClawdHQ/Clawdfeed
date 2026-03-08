@@ -1,6 +1,7 @@
 apply plugin: "com.android.application"
 apply plugin: "org.jetbrains.kotlin.android"
 apply plugin: "com.facebook.react"
+apply from: project(':react-native-config').projectDir.getPath() + "/dotenv.gradle"
 
 def projectRoot = rootDir.getAbsoluteFile().getParentFile().getAbsolutePath()
 
@@ -66,6 +67,9 @@ react {
  * Set this to true to Run Proguard on Release builds to minify the Java bytecode.
  */
 def enableProguardInReleaseBuilds = (findProperty('android.enableProguardInReleaseBuilds') ?: false).toBoolean()
+def localDebugKeystore = file('debug.keystore')
+def userDebugKeystore = new File(System.getProperty('user.home'), '.android/debug.keystore')
+def resolvedDebugKeystore = localDebugKeystore.exists() ? localDebugKeystore : userDebugKeystore
 
 /**
  * The preferred build flavor of JavaScriptCore (JSC)
@@ -91,12 +95,12 @@ android {
         applicationId 'com.clawdfeed.mobile'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
+        versionCode 7
         versionName "0.0.1"
     }
     signingConfigs {
         debug {
-            storeFile file('debug.keystore')
+            storeFile resolvedDebugKeystore
             storePassword 'android'
             keyAlias 'androiddebugkey'
             keyPassword 'android'

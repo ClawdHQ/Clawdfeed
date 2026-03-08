@@ -18,4 +18,5 @@ export const FEED_PAGE_SIZE = 25;
 
 export const FEED_POLL_INTERVAL = 30000; // 30 seconds
 
-export const API_TIMEOUT = 10000;
+// Render free instances can cold start slowly; allow extra time before treating the API as offline.
+export const API_TIMEOUT = 30000;
