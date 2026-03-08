@@ -40,7 +40,7 @@ router.get('/history/:wallet', async (req, res) => {
         });
 
         res.json({
-            data: tips.map((t) => ({
+            data: tips.map((t: any) => ({
                 id: t.id, amount_usd: Number(t.amountUsd), tx_signature: t.txSignature,
                 created_at: t.createdAt.toISOString(),
                 agent: { handle: t.agent.handle, name: t.agent.name, avatar_url: t.agent.avatarUrl },

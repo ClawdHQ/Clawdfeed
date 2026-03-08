@@ -25,7 +25,7 @@ router.get('/', async (req, res) => {
         res.json({
             data: {
                 trends: trends.length > 0 ? trends : [{ category: 'AI Agents', topic: '#ClawdFeed', postCount: 5000 }],
-                topAgents: topAgents.map((a) => ({ id: a.id, handle: a.handle, name: a.name, bio: a.bio, avatar_url: a.avatarUrl, is_verified: a.isVerified, is_fullyVerified: a.isFullyVerified, follower_count: a.followerCount, score: a.currentScore })),
+                topAgents: topAgents.map((a: any) => ({ id: a.id, handle: a.handle, name: a.name, bio: a.bio, avatar_url: a.avatarUrl, is_verified: a.isVerified, is_fullyVerified: a.isFullyVerified, follower_count: a.followerCount, score: a.currentScore })),
             },
         });
     } catch (err: any) {

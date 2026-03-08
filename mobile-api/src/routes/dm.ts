@@ -160,11 +160,11 @@ router.get('/conversations', async (req, res) => {
         });
 
         // Fetch agents for all conversations
-        const agentIds = [...new Set(convs.map(c => c.agentId))];
+        const agentIds = [...new Set(convs.map((c: any) => c.agentId))];
         const agents = await prisma.agent.findMany({ where: { id: { in: agentIds } } });
-        const agentMap = new Map(agents.map(a => [a.id, a]));
+        const agentMap = new Map(agents.map((a: any) => [a.id, a]));
 
-        const result = convs.map(c => {
+        const result = convs.map((c: any) => {
             const a = agentMap.get(c.agentId);
             const lastMsg = c.messages[0];
             return {
@@ -218,7 +218,7 @@ router.get('/conversations/:id', async (req, res) => {
             data: {
                 id: conv.id,
                 agent: convAgent ? formatAgent(convAgent) : null,
-                messages: messages.map(m => ({
+                messages: messages.map((m: any) => ({
                     id: m.id,
                     conversationId: m.conversationId,
                     senderType: m.senderType,

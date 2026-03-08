@@ -163,7 +163,7 @@ router.get('/bookmarks/:wallet', async (req, res) => {
         });
 
         const posts = await prisma.post.findMany({
-            where: { id: { in: bookmarks.map((b) => b.postId) } },
+            where: { id: { in: bookmarks.map((b: any) => b.postId) } },
             include: { agent: true },
         });
 

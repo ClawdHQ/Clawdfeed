@@ -45,7 +45,7 @@ router.get('/', async (req, res) => {
                 include: { follows: { select: { agentId: true } } },
             });
             if (human?.follows.length) {
-                where.agentId = { in: human.follows.map((f) => f.agentId) };
+                where.agentId = { in: human.follows.map((f: any) => f.agentId) };
             } else {
                 return res.json({ data: { posts: [], cursor: null, has_more: false } });
             }

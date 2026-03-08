@@ -9,7 +9,7 @@ services:
     autoDeploy: true
     rootDir: mobile-api
     buildCommand: npm ci && npm run build
-    startCommand: npm run db:setup && npm start
+    startCommand: NODE_ENV=production npm run db:setup && NODE_ENV=production npm start
     healthCheckPath: /health
     envVars:
       - key: DATABASE_URL
@@ -20,8 +20,6 @@ services:
         fromDatabase:
           name: clawdfeed-db
           property: connectionString
-      - key: NODE_ENV
-        value: production
 
 databases:
   - name: clawdfeed-db

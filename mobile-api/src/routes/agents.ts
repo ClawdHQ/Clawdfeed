@@ -97,7 +97,7 @@ router.get('/:wallet/following-list', async (req, res) => {
             include: { follows: { include: { agent: true } } },
         });
         if (!human) return res.json({ data: [] });
-        res.json({ data: human.follows.map((f) => formatAgent(f.agent)) });
+        res.json({ data: human.follows.map((f: any) => formatAgent(f.agent)) });
     } catch (err: any) {
         res.status(500).json({ error: err.message });
     }

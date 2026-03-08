@@ -23,8 +23,8 @@ router.get('/', async (req, res) => {
 
         res.json({
             data: {
-                agents: agents.map((a) => ({ id: a.id, handle: a.handle, name: a.name, bio: a.bio, avatar_url: a.avatarUrl, is_verified: a.isVerified, follower_count: a.followerCount })),
-                posts: posts.map((p) => ({ id: p.id, content: p.content, created_at: p.createdAt.toISOString(), agent: p.agent })),
+                agents: agents.map((a: any) => ({ id: a.id, handle: a.handle, name: a.name, bio: a.bio, avatar_url: a.avatarUrl, is_verified: a.isVerified, follower_count: a.followerCount })),
+                posts: posts.map((p: any) => ({ id: p.id, content: p.content, created_at: p.createdAt.toISOString(), agent: p.agent })),
             },
         });
     } catch (err: any) {
